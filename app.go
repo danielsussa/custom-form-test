@@ -32,10 +32,14 @@ func CreateDocsEndpoint(w http.ResponseWriter, req *http.Request) {
 	orgId := mux.Vars(req)["org"]
 	schema := schemaMap[fmt.Sprintf("%s/%s", orgId, docId)]
 
-	var docs interface{}
-	_ = json.NewDecoder(req.Body).Decode(&docs)
+	//Load Doc
+	var doc map[string]interface{}
+	_ = json.NewDecoder(req.Body).Decode(&doc)
+
+	validateFields(doc, schema.Fields)
+
 	log.Println(schema.Fields["nome"].FieldType)
-	json.NewEncoder(w).Encode(docs)
+	json.NewEncoder(w).Encode(doc)
 }
 
 func main() {
@@ -63,5 +67,12 @@ func getSchema() {
 		_ = json.Unmarshal(dat, &schema)
 		schemaMap[fmt.Sprintf("%s/%s", schema.Org, schema.Doc)] = schema
 		fmt.Println(schema)
+	}
+}
+
+func validateFields(doc map[string]interface{}, fields map[string]Field) {
+	for fieldKey, fieldValue := range doc {
+		field := fields[fieldKey]
+		fmt.Println(fieldKey, fieldValue, field)
 	}
 }
