@@ -1,0 +1,8 @@
+{
+  "doc":"1234",
+  "org":"425231525",
+  "fields":{
+    "nome":{"fieldType":"string"},
+    "numero":{"fieldType":"string"}
+  }
+}
